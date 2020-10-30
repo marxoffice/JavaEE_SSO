@@ -9,10 +9,10 @@
 <body>
 
 <p>
-    <a href="http://localhost:8080/app1/view.do">System 1</a>
+    <a href="http://localhost:8080/app1/app">System 1</a>
 </p>
 <p>
-    <a href="http://localhost:8080/app2/view.do">System 2</a>
+    <a href="http://localhost:8080/app2/app">System 2</a>
 </p>
 
 </body>
