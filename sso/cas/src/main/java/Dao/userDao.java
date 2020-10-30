@@ -26,7 +26,7 @@ public class userDao {
      * @password 用户密码
      * @retrun true 存在用户 false 不存在用户
      */
-    public Boolean checkLogin(String name, String password) throws Exception {
+    public static Boolean checkLogin(String name, String password) throws Exception {
         Connection conn = getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement("select * from user where ID=?");

@@ -1,5 +1,7 @@
 package servlet;
 
+import JwtTools.JwtUtils;
+import Dao.userDao;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -9,59 +11,59 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * cas的login页面servlet
+ */
 @WebServlet(value = "/login")
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // User = req.getParameter("user");
-        String username = "";
-        // username = User.getUsername();
-        Cookie[] cookies = req.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(username)) {
-                String usernameFromJwt = "";
-                // usernameFromJwt = JWTHelper.getUsernameFromJwt();
-                if (username.equals(usernameFromJwt)) {
-                    resp.sendRedirect(req.getContextPath()+"/app");
-                } else {
-                    resp.setContentType("text.html; charset=UTF-8");
-                    resp.getWriter().println("please login");
-                    resp.sendRedirect("http://localhost:8080/cas/login");
-                }
-                break;
+        String LOCAL_SERVICE=req.getParameter("LOCAL_SERVICE");
+        String user_id = "";
+        Cookie[] cookies = ((HttpServletRequest) req).getCookies();
+        if(cookies != null && cookies.length>0) {
+            for (Cookie cookie : cookies) {
+                if("JWT".equals(cookie.getName()))
+                    user_id = JwtUtils.getPayload(cookie.getValue());
+            }
+        }
+        if(user_id != null ){  // user_id不为空，则说明jwt验证成功
+            if(LOCAL_SERVICE != null){  // 不为空，则有来源地址LOCAL_SERVICE
+                resp.sendRedirect(LOCAL_SERVICE);
+            }
+            else{
+                return;
             }
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        String LOCAL_SERVICE=req.getParameter("LOCAL_SERVICE");
+        String username = req.getParameter("id");
+        String password = req.getParameter("pwd");
+        boolean result = false;
+        // 验证数据库
+        try {
+            result = userDao.checkLogin(username, password);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        if(result == true){  // 存在用户，生成jwt
+            String JWT = JwtUtils.createToken(username);
+            Cookie jwt_cookie = new Cookie("JWT", JWT);
+            jwt_cookie.setMaxAge(60*5);
+            jwt_cookie.setPath("/");
+            resp.addCookie(jwt_cookie);
+            if (LOCAL_SERVICE != null && !LOCAL_SERVICE.equals("")) // 有来源地址
+            {
+                resp.sendRedirect(LOCAL_SERVICE);
+            } else  // 无来源地址，返回index界面
+                resp.sendRedirect(req.getContextPath()+"/index.jsp");
+        }
+        else{  // 登录失败
+            return;
+        }
 
-        Cookie[] cookies = req.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(username)) {
-                String usernameFromJwt = "";
-                // usernameFromJwt = JWTHelper.getUsernameFromJwt();
-                if (username.equals(usernameFromJwt)) {
-                    resp.sendRedirect(req.getContextPath()+"/app");
-                }
-                break;
-            }
-        }
-        // check username and password
-        boolean isUserValid = true;
-        // isUserValid = UserController.check(username, password);
-        if (isUserValid) {
-            String jwt = "";
-            // jwt = JWTHelper.generate(username);
-            Cookie cookie = new Cookie(username, jwt);
-            // send cookie to app1, app2;
-            // ....
-        } else {
-            resp.setContentType("text.html; charset=UTF-8");
-            resp.getWriter().println("login failed");
-            resp.sendRedirect("http://localhost:8080/cas/login");
-        }
     }
 }
