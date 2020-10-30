@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * 为每一个页面添加一个验证登录
  */
-@WebFilter("/*")
+@WebFilter(urlPatterns="/*")
 public class LoginFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
