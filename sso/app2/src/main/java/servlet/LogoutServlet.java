@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet implementation class LogoutServlet
+ * 纯api接口
+ * 功能是只退出本系统
+ * 即删除本系统对应的cookie-jwt验证的数据
+ * 注意：这并不是退出整个单点登录系统的入口servlet
  */
 @WebServlet("/Logout")
 public class LogoutServlet extends HttpServlet {
@@ -31,7 +34,7 @@ public class LogoutServlet extends HttpServlet {
         // 删除cookie中jwt记录
         Cookie cookies[] = request.getCookies();
         for (Cookie cookie:cookies) { // 循环找到相应的jwt
-            if("JWT".equalsIgnoreCase(cookie.getName())) {
+            if("APP2_JWT".equalsIgnoreCase(cookie.getName())) {
                 cookie.setMaxAge(0);
                 cookie.setPath("/");
                 response.addCookie(cookie);

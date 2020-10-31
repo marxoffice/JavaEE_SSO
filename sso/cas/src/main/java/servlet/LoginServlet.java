@@ -23,14 +23,17 @@ public class LoginServlet extends HttpServlet {
         Cookie[] cookies = req.getCookies();
         if(cookies != null && cookies.length>0) {
             for (Cookie cookie : cookies) {
-                if("JWT".equals(cookie.getName()))
+                if("JWT".equals(cookie.getName())) {
                     JWT = cookie.getValue();
                     user_id = JwtUtils.getPayload(cookie.getValue());
+                }
             }
         }
         if(user_id != null ){  // user_id不为空，则说明jwt验证成功
             if(LOCAL_SERVICE != null){  // 不为空，则有来源地址LOCAL_SERVICE
                 // 返回源地址，加上参数JWT
+                System.out.println("in CAS user_id not null & LOCAL_SERVICE not null");
+                System.out.println(LOCAL_SERVICE+"?jwt_cookie="+JWT+"&user_id="+user_id);
                 resp.sendRedirect(LOCAL_SERVICE+"?jwt_cookie="+JWT);
             }
         } else { // user_id 为空 无jwt或验证失败

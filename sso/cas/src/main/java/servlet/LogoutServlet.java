@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class LogoutServlet
+ * 纯api接口
+ * 功能是只退出本系统
+ * 即删除本系统对应的cookie-jwt验证的数据
+ * 注意：这并不是退出整个单点登录系统的入口servlet
  */
 @WebServlet("/Logout")
 public class LogoutServlet extends HttpServlet {
