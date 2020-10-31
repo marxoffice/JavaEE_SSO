@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * app's servlet
  */
-@WebServlet(value = "app")
+@WebServlet(value = "/app")
 public class appServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
