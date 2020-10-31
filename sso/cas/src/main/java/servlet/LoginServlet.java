@@ -67,12 +67,13 @@ public class LoginServlet extends HttpServlet {
                 // 返回源地址，加上参数JWT
                 resp.sendRedirect(LOCAL_SERVICE+"?jwt_cookie="+JWT);
             } else  // 无来源地址，返回index界面
-                System.out.println("登陆成功 无来源");
+                System.out.print("登陆成功 无来源,默认跳转到：");
+                System.out.println(req.getContextPath()+"/index.jsp");
                 resp.sendRedirect(req.getContextPath()+"/index.jsp");
         }
         else{  // 登录失败
             return;
         }
-
+        return;
     }
 }
