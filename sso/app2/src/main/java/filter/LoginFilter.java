@@ -1,6 +1,7 @@
 package filter;
 
 import JwtTools.JwtUtils;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
@@ -12,7 +13,7 @@ import java.io.IOException;
 /**
  * 为每一个页面添加一个验证登录
  */
-@WebFilter(urlPatterns="/*")
+@WebFilter("/*")
 public class LoginFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -30,9 +31,11 @@ public class LoginFilter implements Filter {
             }
         }
         if(user_id == null){ // 若user_id为空，则jwt中无信息，重定向到cas的登录页面，网址中带上App的网址信息，便于跳回
-            httpResponse.sendRedirect("http://localhost:8080/cas/login.do" + "?"
+            httpResponse.sendRedirect("http://localhost:8080/cas/login" + "?"
                     + "LOCAL_SERVICE" + "="
                     + httpRequest.getRequestURL());
+        } else {
+            chain.doFilter(request, response);
         }
     }
 

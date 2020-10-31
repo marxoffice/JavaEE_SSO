@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String LOCAL_SERVICE=req.getParameter("LOCAL_SERVICE");
-        String user_id = "";
+        String user_id = null;
         Cookie[] cookies = ((HttpServletRequest) req).getCookies();
         if(cookies != null && cookies.length>0) {
             for (Cookie cookie : cookies) {
@@ -34,6 +34,8 @@ public class LoginServlet extends HttpServlet {
             else{
                 return;
             }
+        } else { // user_id 为空 无jwt或验证失败
+            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
         }
     }
 
@@ -57,8 +59,11 @@ public class LoginServlet extends HttpServlet {
             resp.addCookie(jwt_cookie);
             if (LOCAL_SERVICE != null && !LOCAL_SERVICE.equals("")) // 有来源地址
             {
+                System.out.print("登录成功 CAS LOCAL SERVICE来源:");
+                System.out.println(LOCAL_SERVICE);
                 resp.sendRedirect(LOCAL_SERVICE);
             } else  // 无来源地址，返回index界面
+                System.out.println("登陆成功 无来源");
                 resp.sendRedirect(req.getContextPath()+"/index.jsp");
         }
         else{  // 登录失败
