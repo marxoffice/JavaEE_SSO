@@ -42,7 +42,8 @@ public class LoginFilter implements Filter {
             cookie.setMaxAge(60*5);
             cookie.setPath("/");
             httpResponse.addCookie(cookie);
-            chain.doFilter(httpRequest, httpResponse);
+            httpResponse.sendRedirect(String.valueOf(httpRequest.getRequestURL()));
+//            chain.doFilter(httpRequest, httpResponse);
         }
         else if(user_id == null){ // 若user_id为空，则jwt中无信息，重定向到cas的登录页面，网址中带上App的网址信息，便于跳回
             httpResponse.sendRedirect("http://localhost:8080/cas/login" + "?"
