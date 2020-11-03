@@ -44,6 +44,7 @@ public class LoginFilter implements Filter {
             cookie.setMaxAge(60*5);
             cookie.setPath("/");
             httpResponse.addCookie(cookie);
+            // hide jwt message in url
             httpResponse.sendRedirect(String.valueOf(httpRequest.getRequestURL()));
 //            chain.doFilter(httpRequest, httpResponse);
         }
@@ -52,6 +53,7 @@ public class LoginFilter implements Filter {
                     + "LOCAL_SERVICE" + "="
                     + httpRequest.getRequestURL());
         } else {  // 已有JWT，执行网页
+            request.setAttribute("username", user_id);
             chain.doFilter(request, response);
         }
     }
