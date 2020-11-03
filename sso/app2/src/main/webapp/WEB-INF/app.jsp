@@ -46,6 +46,9 @@
 </head>
 <body>
 <h2>------WELCOME TO APP2------</h2><br>
+<p>
+    <a href="http://localhost:8080/app1/app">click to app1</a>
+</p>
 <button onclick="logoutAll()">LOGOUT</button>
 </body>
 </html>
